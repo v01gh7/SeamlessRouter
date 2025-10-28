@@ -1,8 +1,3 @@
-Excellent 💪 Here's a stylish and clear README.md for your **SeamlessRouter** project,
-designed with beautiful badges and a minimalist dev focus:
-
----
-
 ````markdown
 # ⚡ SeamlessRouter
 
