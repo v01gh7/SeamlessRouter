@@ -1,5 +1,9 @@
 import { appendFreshScript } from "@core/utils/dom";
 
+/**
+ * Synchronizes current document head with new head from loaded page.
+ * Handles special cases: title replacement, script re-execution, and duplicate prevention.
+ */
 export const updateHead = (newHead: HTMLHeadElement) => {
     const currentHead = document.head;
     const newHeadElements = Array.from(newHead.children);
@@ -33,6 +37,13 @@ export const updateHead = (newHead: HTMLHeadElement) => {
 }
 
 
+/**
+ * Checks if an element already exists in <head> by comparing specific attributes:
+ * - For <meta>: matches by 'name' or 'property' attribute
+ * - For <link>: matches by 'rel' and 'href' attributes  
+ * - For other elements: basic tag name comparison only
+ * Used to prevent duplicate head elements during navigation.
+ */
 const isElementInHead = (newElem: Element, head: HTMLHeadElement): boolean => {
     const tagName = newElem.tagName.toLowerCase();
 
