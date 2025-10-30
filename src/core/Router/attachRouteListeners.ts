@@ -1,8 +1,8 @@
 
 const getHrefForRoute = (element: HTMLElement): string | null => {
-    if (element.tagName.toLowerCase() === 'a') {
+    if (element.tagName.toLowerCase() === 'a' && element.hasAttribute('href')) {
         return element.getAttribute('href');
-    } else if (element.tagName.toLowerCase() === 'button') {
+    } else if (element.tagName.toLowerCase() === 'button' && element.hasAttribute('data-router-link')) {
         return element.getAttribute('data-router-link');
     }
     return null;
@@ -14,7 +14,7 @@ export const attachRoutesListeners = (elements: HTMLElement[], onNavigate: (url:
             const target = e.currentTarget as HTMLElement;
 
             if (target.tagName.toLowerCase() !== 'a' && target.tagName.toLowerCase() !== 'button') return;
-            
+
             const href: string | null = getHrefForRoute(target);
 
             if (!href) return;
