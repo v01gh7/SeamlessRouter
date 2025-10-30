@@ -1,5 +1,7 @@
 import { safeNavigateFallback } from "@core/utils";
 import { loadPage } from "./loadPage";
+import { parseHTML } from "@core/utils/dom";
+import { updateHead } from "./updateHead";
 
 export const navigate = async (url: string) => {
     console.log('Навигация к:', url);
@@ -10,6 +12,10 @@ export const navigate = async (url: string) => {
     return;
     }
 
+    const text = await res.text();
+    const doc = parseHTML(text);
+
+    updateHead(doc.head);
 }
 
 window.addEventListener('popstate', () => {
