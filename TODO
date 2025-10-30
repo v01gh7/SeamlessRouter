@@ -1,0 +1,11 @@
+Intercept all <a> and <button> with a safe fallback
+Parse <head> and update <meta>
+Caching content in IndexedDB
+Update history.pushState and handle popstate
+Page transition animations
+
+Prefetch on hover (mouseover → preload into cache).
+
+Loading progress bar (like YouTube or Medium).
+
+Diff DOM to ensure smooth transition animations.
