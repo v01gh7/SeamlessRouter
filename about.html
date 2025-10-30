@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1"><meta name="description" content="" />
+	<meta name="description" content="{$_modx->resource.description}" />
+	<meta name="keywords" content="[[+seoPro.keywords]]" />
+	<base href="[[++site_url]]" />
+	<link rel="canonical" href="{'!Canonical' | snippet}"/>
+	<!-- CSS -->
+
+	<link defer rel="preload" href="css/main.css" as="style">
+
+
+	<link defer rel="stylesheet" href="css/main.css">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Onest:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>About Page</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/" data-router-link>Главная</a> |
+        <div class="active">О нас</div> |
+        <a href="/contacts" data-router-link>Контакты</a>
+      </nav>
+    </header>
+
+    <main id="app">
+      <h1>Страница о компании страница</h1>
+      <p>Добро пожаловать! Перейди по ссылке выше — страница должна обновляться через AJAX.</p>
+    </main>
+
+    <!-- Подключаем наш скрипт -->
+    <script type="module" src="/src/index.ts"></script>
+    <script src="/test/main.js"></script>
+  </body>
+</html>
