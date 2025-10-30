@@ -18,3 +18,8 @@ export const addClass = (el: HTMLElement | Element | null, _className: string = 
     }
     return false;
 }
+
+export const safeNavigateFallback = (url: string) => {
+  console.warn('Fallback: redirecting via full page reload', url);
+  window.location.href = url;
+};
