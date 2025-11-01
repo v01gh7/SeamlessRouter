@@ -1,11 +1,9 @@
-import { attachRoutesListeners } from "./Router/attachRouteListeners";
-import { gatherRoutes } from "./Router/gatherRoutes";
+import { attachGlobalRoutesListener } from "./Router/attachRouteListeners";
 import { navigate } from "./Router/navigation";
 
 export class Router {
   init() {
-    const routes = gatherRoutes();
-    attachRoutesListeners(routes, navigate);
+    attachGlobalRoutesListener(navigate);
     console.log("🚀 Router initialized");
   }
 }
