@@ -1,4 +1,4 @@
-import { appendFreshScript } from "@core/utils/dom";
+import { appendFreshScript, shouldPreserve, shouldSkip } from "@core/utils/dom";
 
 /**
  * Synchronizes current document head with new head from loaded page.
@@ -18,7 +18,7 @@ export const updateHead = (newHead: HTMLHeadElement) => {
             continue;
         }
         if (tagName === 'script') {
-            if (newElem.hasAttribute('data-skip')) continue;
+            if (shouldSkip(newElem)) continue;
             appendFreshScript(newElem as HTMLScriptElement, 'head');
             continue;
         }
@@ -30,6 +30,7 @@ export const updateHead = (newHead: HTMLHeadElement) => {
     }
 
     for (const oldElem of currentHead.children) {
+        if (shouldPreserve(oldElem)) continue;
         if (!isElementInHead(oldElem, newHead)) {
             oldElem.remove();
         }
