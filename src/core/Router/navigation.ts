@@ -3,6 +3,7 @@ import { loadPage } from "./loadPage";
 import { parseHTML } from "@core/utils/dom";
 import { updateHead } from "./updateHead";
 import { updateBody } from "./updateBody";
+import { runScripts } from "./runScripts";
 
 export const navigate = async (url: string) => {
     console.log('Навигация к:', url);
@@ -18,6 +19,7 @@ export const navigate = async (url: string) => {
 
     updateHead(doc.head);
     updateBody(doc.body);
+    runScripts(doc.body);
 }
 
 window.addEventListener('popstate', () => {
