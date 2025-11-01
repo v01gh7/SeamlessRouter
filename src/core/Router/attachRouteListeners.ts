@@ -11,12 +11,23 @@ const getHrefForRoute = (element: HTMLElement): string | null => {
         response = element.getAttribute('data-router-link');
     }
 
-    if (response && !response.startsWith(document.location.origin)) {
-        response = null;
-    }
+    if (!response) return null;
 
-    return response;
+    // Нормализуем URL
+    try {
+        const url = new URL(response, document.location.origin);
+
+        // Пропускаем только если тот же домен (чтобы не ловить внешние ссылки)
+        if (url.origin !== document.location.origin) {
+        return null;
+        }
+
+        return url.pathname + url.search + url.hash;
+    } catch {
+        return null; // если response — невалидный URL
+    }
 };
+
 
 
 export const attachRoutesListeners = (elements: HTMLElement[], onNavigate: (url: string) => void) => {
@@ -39,8 +50,10 @@ export const attachRoutesListeners = (elements: HTMLElement[], onNavigate: (url:
 
 export const attachGlobalRoutesListener = (onNavigate: (url: string) => void) => {
     document.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        const link = target.closest(ROUTE_SELECTORS.join(',')) as HTMLElement | null;
+        const target = e.target as HTMLElement | null;
+        if (!target) return;
+
+        const link = target.closest(ROUTE_SELECTORS.join(', ')) as HTMLElement | null;
         if (!link) return;
 
         const href = getHrefForRoute(link);
@@ -51,3 +64,7 @@ export const attachGlobalRoutesListener = (onNavigate: (url: string) => void) =>
         onNavigate(href);
     });
 };
+
+
+
+
