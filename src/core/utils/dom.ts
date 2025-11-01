@@ -29,3 +29,12 @@ export const appendFreshScript = (newElem: HTMLScriptElement, appendTo: string =
     }
     return;
 };
+
+
+export const shouldPreserve = (elem: Element): boolean => 
+    elem.hasAttribute('data-keep');
+
+export const shouldSkip = (elem: Element): boolean => 
+    elem.hasAttribute('data-skip');
+
+
