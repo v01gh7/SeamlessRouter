@@ -18,6 +18,7 @@ export const updateHead = (newHead: HTMLHeadElement) => {
             continue;
         }
         if (tagName === 'script') {
+            if (newElem.hasAttribute('data-skip')) continue;
             appendFreshScript(newElem as HTMLScriptElement, 'head');
             continue;
         }
