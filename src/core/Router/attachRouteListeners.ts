@@ -1,3 +1,4 @@
+import { ROUTE_SELECTORS } from "@core/utils";
 
 const getHrefForRoute = (element: HTMLElement): string | null => {
     let response: string | null = null;
@@ -35,3 +36,18 @@ export const attachRoutesListeners = (elements: HTMLElement[], onNavigate: (url:
         })
     }
 }
+
+export const attachGlobalRoutesListener = (onNavigate: (url: string) => void) => {
+    document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        const link = target.closest(ROUTE_SELECTORS.join(',')) as HTMLElement | null;
+        if (!link) return;
+
+        const href = getHrefForRoute(link);
+        if (!href) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        onNavigate(href);
+    });
+};
