@@ -23,3 +23,8 @@ export const safeNavigateFallback = (url: string) => {
     console.warn('Fallback: redirecting via full page reload', url);
     window.location.href = url;
 };
+
+export const ROUTE_SELECTORS: string[] = [
+    'a',
+    'button[data-router-link]'
+];
