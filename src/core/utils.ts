@@ -20,6 +20,6 @@ export const addClass = (el: HTMLElement | Element | null, _className: string = 
 }
 
 export const safeNavigateFallback = (url: string) => {
-  console.warn('Fallback: redirecting via full page reload', url);
-  window.location.href = url;
+    console.warn('Fallback: redirecting via full page reload', url);
+    window.location.href = url;
 };
