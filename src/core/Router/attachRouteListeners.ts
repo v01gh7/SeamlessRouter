@@ -1,12 +1,22 @@
 
 const getHrefForRoute = (element: HTMLElement): string | null => {
+    let response: string | null = null;
+
     if (element.tagName.toLowerCase() === 'a' && element.hasAttribute('href')) {
-        return element.getAttribute('href');
+        const anchor = element as HTMLAnchorElement;
+        if (anchor.target === '_blank') return null;
+        response = anchor.getAttribute('href');
     } else if (element.tagName.toLowerCase() === 'button' && element.hasAttribute('data-router-link')) {
-        return element.getAttribute('data-router-link');
+        response = element.getAttribute('data-router-link');
     }
-    return null;
-}
+
+    if (response && !response.startsWith(document.location.origin)) {
+        response = null;
+    }
+
+    return response;
+};
+
 
 export const attachRoutesListeners = (elements: HTMLElement[], onNavigate: (url: string) => void) => {
     for (const element of elements) {
