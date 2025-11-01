@@ -1,10 +1,8 @@
+import { ROUTE_SELECTORS } from "@core/utils"
 
-const routesSelectors: string[] = [
-    'a',
-    'button[data-router-link]'
-];
+
 
 export const gatherRoutes = (): HTMLElement[] => {
-    const elements = Array.from(document.querySelectorAll<HTMLElement>(routesSelectors.join(',')))
+    const elements = Array.from(document.querySelectorAll<HTMLElement>(ROUTE_SELECTORS.join(',')))
     return elements
 }
