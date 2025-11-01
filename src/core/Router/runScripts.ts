@@ -6,6 +6,6 @@ export const runScripts = (newBody: HTMLElement) => {
     for (const script of scripts) {
         if (shouldSkip(script)) continue;
         if (shouldPreserve(script)) continue; 
-        appendFreshScript(script as HTMLScriptElement);
+        appendFreshScript(script as HTMLScriptElement, 'body');
     }
 };
