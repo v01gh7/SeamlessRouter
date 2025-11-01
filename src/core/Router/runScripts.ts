@@ -1,7 +1,11 @@
-import { appendFreshScript } from "@core/utils/dom";
+import { appendFreshScript, shouldSkip, shouldPreserve } from "@core/utils/dom";
 
 export const runScripts = (newBody: HTMLElement) => {
-    for (const script of newBody.querySelectorAll('script:not([data-skip])')) {
+    const scripts = newBody.querySelectorAll('script');
+
+    for (const script of scripts) {
+        if (shouldSkip(script)) continue;
+        if (shouldPreserve(script)) continue; 
         appendFreshScript(script as HTMLScriptElement);
     }
 };
