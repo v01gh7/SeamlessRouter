@@ -53,6 +53,17 @@ export const appendFreshScript = (
     scriptCache.add(hash);
 };
 
+export const extractScripts = (newBody: HTMLBodyElement): HTMLScriptElement[] => {
+    const scripts = Array.from(newBody.querySelectorAll('script'));
+    const response: HTMLScriptElement[] = [];
+    for (const script of scripts) {
+        const clonedScript = cloneScript(script as HTMLScriptElement);
+        response.push(clonedScript);
+        newBody.removeChild(script);
+    }
+    return response;
+};
+
 const removeExistingScript = (elem: HTMLScriptElement, hash: string): void => {
     if (hash.startsWith("src:")) {
         const src = elem.getAttribute("src");
