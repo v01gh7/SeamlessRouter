@@ -1,7 +1,7 @@
-import { appendFreshScript, shouldSkip, shouldPreserve } from "@core/utils/dom";
+import { appendFreshScript, shouldSkip, shouldPreserve, extractScripts } from "@core/utils/dom";
 
 export const runScripts = (newBody: HTMLElement) => {
-    const scripts = newBody.querySelectorAll('script');
+    const scripts: HTMLScriptElement[] = extractScripts(newBody as HTMLBodyElement);
 
     for (const script of scripts) {
         if (shouldSkip(script)) continue;
