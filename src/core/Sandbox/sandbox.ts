@@ -9,12 +9,11 @@ type CleanupRecord = {
 
 const sandboxMap = new WeakMap<HTMLScriptElement, CleanupRecord>();
 
-const globalRecord: CleanupRecord = { timeouts: [], intervals: [], listeners: [] };
+const globalRecord: CleanupRecord = { timeouts: [], intervals: [], listeners: [],};
 const originalAddEventListener = EventTarget.prototype.addEventListener;
 const originalRemoveEventListener = EventTarget.prototype.removeEventListener;
 const originalSetTimeout = window.setTimeout;
 const originalSetInterval = window.setInterval;
-
 
 // === 1️⃣ Базовая глобальная песочница ===
 export const initGlobalSandbox = () => {
@@ -71,26 +70,12 @@ export const initGlobalSandbox = () => {
     };
 
 
-    const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-            for (const node of mutation.addedNodes) {
-                if (node instanceof HTMLScriptElement) {
-                    observer.disconnect(); // предотвратить повторное срабатывание
-                    appendFreshScript(node);
-                }
-            }
-        }
-    });
-
-    observer.observe(document, { childList: true, subtree: true });
-
-
     console.log('🧩 Sandbox initialized');
 };
 
 // === 3️⃣ Привязка каждого <script> ===
 export const setupSandbox = (script: HTMLScriptElement) => {
-    const record: CleanupRecord = { timeouts: [], intervals: [], listeners: [] };
+    const record: CleanupRecord = { timeouts: [], intervals: [], listeners: [], classes: new Set(), functions: new Set() };
     sandboxMap.set(script, record);
 };
 
@@ -104,6 +89,7 @@ export const cleanupSandbox = (script: HTMLScriptElement) => {
     record.listeners.forEach(({ target, type, handler, options }) => {
         target.removeEventListener(type, handler, options);
     });
+
 
     sandboxMap.delete(script);
     console.log(`🧹 Cleaned up script:`, script);
