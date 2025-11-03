@@ -7,8 +7,3 @@ export class Router {
     console.log("🚀 Router initialized");
   }
 }
-
-// ⏳ Автоинициализация, когда DOM готов
-document.addEventListener("DOMContentLoaded", () => {
-  new Router().init();
-});
