@@ -1,3 +1,4 @@
+import { setupSandbox } from "@core/Sandbox/sandbox";
 import { hashCode } from "./hash";
 
 export const parseHTML = (htmlText: string): Document => {
@@ -46,7 +47,7 @@ export const appendFreshScript = (
             : appendTo === "head"
             ? document.head
             : document.head;
-
+    setupSandbox(script);
     target.appendChild(script);
 
     // 🧠 Обновляем кэш
@@ -95,6 +96,7 @@ const cloneScript = (elem: HTMLScriptElement): HTMLScriptElement => {
 
     return clone;
 };
+
 
 export const shouldPreserve = (elem: Element): boolean => 
     elem.hasAttribute('data-keep');
