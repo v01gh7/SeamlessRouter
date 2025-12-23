@@ -15,9 +15,9 @@ export interface AnimationOptions {
 }
 
 export class AnimationManager {
-  private isAnimating: boolean = false;
-  private currentAnimation: Animation | null = null;
-  private prefersReducedMotion: boolean = false;
+  protected isAnimating: boolean = false;
+  protected currentAnimation: Animation | null = null;
+  protected prefersReducedMotion: boolean = false;
 
   constructor() {
     this.checkReducedMotion();
@@ -45,7 +45,7 @@ export class AnimationManager {
   /**
    * Проверить, должны ли мы показывать анимации
    */
-  private shouldAnimate(options: AnimationOptions): boolean {
+  protected shouldAnimate(options: AnimationOptions): boolean {
     const config = getConfig();
     
     if (!config.animations.enabled) return false;
