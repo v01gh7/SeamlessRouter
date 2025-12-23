@@ -1,94 +1,216 @@
-````markdown
 # ⚡ SeamlessRouter
 
 [![TypeScript](https://img.shields.io/badge/typescript-%233178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-bad ge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Zero Config](https://img.shields.io/badge/zero_config-2E8B57.svg?style=for-the-badge&logo=simpleanalytics&logoColor=white)](#)
+[![Lightweight](https://img.shields.io/badge/lightweight-FF6B35.svg?style=for-the-badge&logo=linuxcontainers&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](./LICENSE)
 
 ---
 
-### 🧩 About the Project
+### 🧩 What is this router?
 
-**SeamlessRouter** is a lightweight TypeScript router for AJAX navigation,
-which makes transitions between pages smooth, without full page reloads.
+**SeamlessRouter** is an ultra-lightweight router for AJAX navigation that makes transitions between pages smooth without full page reloads.
 
-💨 Faster than standard navigation
-⚙️ Compatible with any CMS (e.g., MODX)
-🧠 Caches pages and updates only changed elements (head, footer, meta)
-🪶 Minimal dependencies - pure TypeScript
+🌐 **Works with regular HTML files and CMS** (MODX, WordPress, Bitrix, and others)  
+⚡ **The easiest way to speed up your site** — just 1 file, 0 configuration  
+🧹 **Automatically cleans up junk** — timers, event listeners, and old scripts  
+🔌 **No dependencies** — pure TypeScript/JavaScript  
+🎯 **Full control** — special attributes for managing script behavior
+
+**Key feature**: the router works on any page, even if you access it directly via a link (for example, directly to `/blog/`).
 
 ---
 
-### 📦 Installation and Run
+### 📦 Installation and Usage
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourname/SeamlessRouter.git
-
-cd SeamlessRouter
-
-# Install dependencies
+# Install dependencies (development only)
 pnpm install
 
-# Start the dev server (Vite)
-pnpm dev
-
-# Build the library
+# Build the project
 pnpm build
-````
-
-After build, the file will be located in:
-
-```
-dist/SeamlessRouter.umd.js
 ```
 
----
+After building, take the file from `dist/` and include it on your site **with the required attributes**:
 
-### 🧠 Structure Project
+```html
+<script data-keep data-skip src="seamless-router.js"></script>
+```
 
-```
-SeamlessRouter/
-├── src/
-│ ├── core/
-│ │ └── router.ts # Main router logic
-│ └── index.ts # Entry point
-├── index.html # Dev example
-├── vite.config.ts # Build configuration
-├── tsconfig.json # TypeScript settings
-└── .gitignore
-```
+**Connection attributes**:
+- `data-keep` — prevents the script from being removed during navigation
+- `data-skip` — prevents the script from being re-executed when new pages load
+
+**That's it!** The router initializes automatically and starts working. No settings, `init()` calls, or configuration needed.
 
 ---
 
 ### 🚀 How it works
 
-1. Intercepts clicks on links (`<a>` and `<button>`).
-2. Makes a `fetch()` request for a new page.
-3. Updates only changed blocks (head, meta, scripts, content).
-4. Gracefully rolls back to a normal page load if an error occurs.
+1. **Intercepts clicks** on links (`<a href="...">`) and buttons with `data-router-link`
+2. **Loads a new page** via `fetch()` without reloading
+3. **Updates only the changed parts**: title, meta tags, content
+4. **Automatically cleans up** scripts, timers, and listeners from the previous page
+5. **If something goes wrong** — automatic fallback to a regular page reload
 
 ---
 
-### 🧰 Roadmap
+### ⚙️ Controlling scripts with data attributes
 
-* [ ] Intercept all `<a>` and `<button>` with a safe fallback
-* [ ] Parse `<head>` and update `<meta>`
-* [ ] Caching content in IndexedDB
-* [ ] Update `history.pushState` and handle `popstate`
-* [ ] Page transition animations
+The router provides special attributes for full control over script behavior:
+
+```html
+<!-- data-keep: script is NOT removed when navigating to a new page -->
+<script data-keep src="shared-library.js"></script>
+
+<!-- data-skip: script is NOT executed when loading new pages -->
+<script data-skip src="analytics.js"></script>
+
+<!-- data-reload: script executes EVERY TIME, even if already cached -->
+<script data-reload src="dynamic-widget.js"></script>
+
+<!-- Combinations: do not remove AND do not execute -->
+<script data-keep data-skip src="seamless-router.js"></script>
+```
 
 ---
 
-### 🤝 Contributions
+### 🛡️ **IMPORTANT REQUIREMENT FOR SCRIPTS**
 
-Pull requests, improvements, and ideas are welcome!
-Before PR, make sure the project is linted and built.
+For complete isolation and to prevent conflicts, **all your scripts must be wrapped in an IIFE** (Immediately Invoked Function Expression):
+
+```javascript
+// ✅ CORRECT — script in IIFE format
+(function() {
+    'use strict';
+    // All your page code here
+    let slider = new Slider();
+    window.myConfig = { /* ... */ }; // Even window.xxx is safe
+})();
+
+// ❌ INCORRECT — global variables
+var slider = new Slider(); // Will cause conflicts between pages!
+```
+
+#### Why is this important?
+- **Isolation**: variables from one page don't conflict with another
+- **Security**: no memory leaks
+- **Simplicity**: no need to worry about unique variable names
+- **Compatibility**: if scripts are in IIFEs, the router works perfectly
+
+**The router does NOT require** wrapping scripts in IIFEs automatically — that's the developer's responsibility.
+
+---
+
+### 🧠 Project Structure
+
+```
+SeamlessRouter/
+├── src/
+│   ├── core/
+│   │   ├── Router/          # Navigation logic
+│   │   ├── Sandbox/         # Sandbox for isolating scripts
+│   │   └── utils/           # Helper functions
+│   └── index.ts             # Entry point
+├── dist/
+│   └── seamless-router.js   # Ready-to-use file
+├── examples/                # Usage examples
+└── README.md
+```
+
+---
+
+### 🎯 Advantages over alternatives
+
+| Feature | SeamlessRouter | Other Routers |
+|------------|----------------|----------------|
+| Size | **~5KB** (after build) | 50-200KB |
+| Dependencies | **0** | React/Vue/Angular |
+| Configuration | **Not required** | JSON, objects, settings |
+| Compatibility | **Any HTML/CMS** | SPA only |
+| Initialization | **Automatic** | Manual `init()` call |
+| Requirements | **IIFE only** | Architecture, build, framework |
+
+---
+
+### 📖 Usage example
+
+1. **Add the router** to all site pages with the correct attributes:
+
+```html
+<html>
+<head>
+    <title>My Site</title>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/blog/">Blog</a>
+        <a href="/about/">About Us</a>
+    </nav>
+    
+    <!-- Shared libraries needed on all pages -->
+    <script data-keep src="shared-library.js"></script>
+    
+    <!-- The router itself - do not remove and do not re-run -->
+    <script data-keep data-skip src="seamless-router.js"></script>
+    
+    <script>
+    // All page scripts in an IIFE
+    (function() {
+        'use strict';
+        console.log('This page works with SeamlessRouter!');
+        
+        // This code doesn't conflict with code on other pages
+        let pageData = { title: 'Home' };
+        window.pageData = pageData; // Can write to window
+    })();
+    </script>
+</body>
+</html>
+```
+
+2. **Create the page `/blog/index.html`**:
+
+```html
+<!-- Widget that needs to be updated every time -->
+<script data-reload src="comments-widget.js"></script>
+
+<script>
+// Blog also in an IIFE
+(function() {
+    'use strict';
+    console.log('Blog loaded!');
+    
+    // Can use the same variable names
+    let pageData = { title: 'Blog' }; // Doesn't conflict with home page
+    window.pageData = pageData;
+})();
+</script>
+```
+
+3. **Enjoy** fast transitions without reloading!
+
+---
+
+### 🚧 Future plans
+
+* **Page prefetching** — loading the next page on hover
+* **Smart caching** — predicting next pages
+* **Offline mode** — working with cached pages without internet
+* **Advanced animations** — smooth transitions between pages
+
+---
+
+### 🤝 Contributing
+
+PRs, improvements, and ideas are welcome!  
+Before a PR, make sure the project is built and tested.
 
 ---
 
 ### 🪪 License
 
-The project is distributed under the [MIT](./LICENSE) license.
-Built with ❤️ for speed and smoothness.
+The project is distributed under the [MIT](./LICENSE) license.  
+Created with ❤️ for speed and smooth navigation.
