@@ -1,0 +1,1 @@
+export { PrefetchManager, type PrefetchRequest } from './PrefetchManager';
