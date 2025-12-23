@@ -51,14 +51,11 @@ export class AdvancedRouter {
     }
   }
 
-  /**
+    /**
    * Внедрить CSS стили для анимаций
    */
   private injectAnimationStyles(): void {
-    // Загружаем CSS анимации
-    this.loadAnimationStyles();
-    
-    // Добавляем инлайн стили
+    // Проверяем, не добавлены ли стили уже
     if (document.head.querySelector('#router-animation-styles')) {
       return; // Стили уже добавлены
     }
@@ -579,42 +576,288 @@ export class AdvancedRouter {
   }
 
   /**
-   * Загрузить CSS стили анимаций
-   */
-  private loadAnimationStyles(): void {
-    // Проверяем, не загружены ли стили уже
-    if (document.head.querySelector('link[href*="animations.css"]')) {
-      return;
-    }
-
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = '/animations.css';
-    link.onload = () => console.log('✅ Animation styles loaded');
-    link.onerror = () => console.warn('⚠️ Failed to load animation styles');
-    
-    document.head.appendChild(link);
-  }
-
-  /**
    * Создать CSS стили для анимаций
    */
   private createAnimationStyles(): string {
     return `
-      /* Базовые стили будут загружены из animations.css */
+      /* Базовые стили для анимированных элементов */
       .router-animation-old,
       .router-animation-new {
         will-change: transform, opacity;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
+        transform-style: preserve-3d;
       }
 
+      /* Анимация fade */
+      @keyframes router-fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes router-fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+
+      .router-animation-fade {
+        animation-timing-function: ease-in-out;
+      }
+
+      /* Анимация slide-left */
+      @keyframes router-slide-left-in {
+        from { 
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to { 
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes router-slide-left-out {
+        from { 
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to { 
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+      }
+
+      .router-animation-slide-left {
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Анимация slide-right */
+      @keyframes router-slide-right-in {
+        from { 
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+        to { 
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes router-slide-right-out {
+        from { 
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to { 
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+
+      .router-animation-slide-right {
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Анимация slide-up */
+      @keyframes router-slide-up-in {
+        from { 
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to { 
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes router-slide-up-out {
+        from { 
+          transform: translateY(0);
+          opacity: 1;
+        }
+        to { 
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+      }
+
+      .router-animation-slide-up {
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Анимация slide-down */
+      @keyframes router-slide-down-in {
+        from { 
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        to { 
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes router-slide-down-out {
+        from { 
+          transform: translateY(0);
+          opacity: 1;
+        }
+        to { 
+          transform: translateY(100%);
+          opacity: 0;
+        }
+      }
+
+      .router-animation-slide-down {
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Анимация collapse */
+      @keyframes router-collapse-in {
+        from { 
+          transform: scale(1.2);
+          opacity: 0;
+        }
+        to { 
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes router-collapse-out {
+        from { 
+          transform: scale(1);
+          opacity: 1;
+        }
+        to { 
+          transform: scale(0.8);
+          opacity: 0;
+        }
+      }
+
+      .router-animation-collapse {
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Анимация diagonal */
+      @keyframes router-diagonal-in {
+        from { 
+          transform: translate(-100%, -100%) scale(1.2);
+          opacity: 0;
+        }
+        to { 
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes router-diagonal-out {
+        from { 
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        to { 
+          transform: translate(100%, 100%) scale(0.8);
+          opacity: 0;
+        }
+      }
+
+      .router-animation-diagonal {
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Классы для ручного управления анимациями */
+      .router-animate-fade {
+        animation: router-fade-in 0.3s ease-in-out;
+      }
+
+      .router-animate-slide-left {
+        animation: router-slide-left-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .router-animate-slide-right {
+        animation: router-slide-right-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .router-animate-slide-up {
+        animation: router-slide-up-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .router-animate-slide-down {
+        animation: router-slide-down-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .router-animate-collapse {
+        animation: router-collapse-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .router-animate-diagonal {
+        animation: router-diagonal-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Поддержка prefers-reduced-motion */
       @media (prefers-reduced-motion: reduce) {
         .router-animation-old,
-        .router-animation-new {
+        .router-animation-new,
+        .router-animate-fade,
+        .router-animate-slide-left,
+        .router-animate-slide-right,
+        .router-animate-slide-up,
+        .router-animate-slide-down,
+        .router-animate-collapse,
+        .router-animate-diagonal {
           animation-duration: 0.01ms !important;
           animation-iteration-count: 1 !important;
           transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* Утилитарные классы для анимаций */
+      .router-animation-container {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .router-animation-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Индикатор загрузки */
+      .router-loading-indicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        z-index: 9999;
+        transform-origin: 0 50%;
+        animation: router-loading 1s infinite;
+      }
+
+      @keyframes router-loading {
+        0% { transform: scaleX(0); }
+        50% { transform: scaleX(0.5); }
+        100% { transform: scaleX(1); }
+      }
+
+      /* Плавный скролл после навигации */
+      .router-smooth-scroll {
+        scroll-behavior: smooth;
+      }
+
+      /* Отключение анимаций для пользователей с prefers-reduced-motion */
+      @media (prefers-reduced-motion: reduce) {
+        .router-smooth-scroll {
+          scroll-behavior: auto;
+        }
+        
+        .router-loading-indicator {
+          display: none;
         }
       }
     `;
