@@ -19,6 +19,8 @@ vite.config.timestamp-*.mjs
 .env.*
 !.env.example
 
+airplans/
+
 # === IDE & OS junk ===
 .idea/
 .vscode/
