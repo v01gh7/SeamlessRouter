@@ -55,7 +55,9 @@ export type AnimationType =
   | 'slide-up' 
   | 'slide-down'
   | 'collapse'
-  | 'diagonal';
+  | 'diagonal'
+  | 'mask-circle'
+  | 'mask-gradient';
 
 // Конфигурация по умолчанию
 export const defaultConfig: RouterConfig = {
@@ -89,7 +91,7 @@ export const defaultConfig: RouterConfig = {
     enabled: true,
     defaultDuration: 300, // 300ms длительность анимации
     respectReducedMotion: true,
-    animationTypes: ['fade', 'slide-left', 'slide-right', 'slide-up', 'slide-down', 'collapse', 'diagonal'],
+    animationTypes: ['fade', 'slide-left', 'slide-right', 'slide-up', 'slide-down', 'collapse', 'diagonal', 'mask-circle', 'mask-gradient'],
     defaultType: 'fade', // Тип анимации по умолчанию
   },
 
