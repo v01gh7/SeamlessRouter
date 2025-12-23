@@ -5,7 +5,7 @@
 import { getConfig, updateConfig, type RouterConfig, type AnimationType } from "./config";
 import { CacheManager } from "./CacheModule";
 import { PrefetchManager } from "./Prefetch";
-import { AnimationManager } from "./Animations";
+import { MaskAnimationManager } from "./Animations/MaskAnimationManager";
 import { ServiceWorkerManager } from "./Offline";
 import { EventEmitter } from "./utils/events";
 import { navigate as baseNavigate } from "./Router/navigation";
@@ -22,7 +22,7 @@ import {
 export class AdvancedRouter {
   private cacheManager: CacheManager;
   private prefetchManager: PrefetchManager;
-  private animationManager: AnimationManager;
+  private animationManager: MaskAnimationManager;
   private serviceWorkerManager: ServiceWorkerManager;
   private eventEmitter: EventEmitter;
   private isInitialized: boolean = false;
@@ -37,7 +37,7 @@ export class AdvancedRouter {
     // Инициализируем менеджеры
     this.cacheManager = new CacheManager();
     this.prefetchManager = new PrefetchManager(this.cacheManager);
-    this.animationManager = new AnimationManager();
+    this.animationManager = new MaskAnimationManager();
     this.serviceWorkerManager = new ServiceWorkerManager();
     this.eventEmitter = new EventEmitter();
 
@@ -56,7 +56,7 @@ export class AdvancedRouter {
    */
   private injectAnimationStyles(): void {
     // Загружаем CSS анимации
-    AnimationManager.loadAnimationStyles();
+    this.loadAnimationStyles();
     
     // Добавляем инлайн стили
     if (document.head.querySelector('#router-animation-styles')) {
@@ -65,7 +65,7 @@ export class AdvancedRouter {
 
     const style = document.createElement('style');
     style.id = 'router-animation-styles';
-    style.textContent = AnimationManager.createAnimationStyles();
+    style.textContent = this.createAnimationStyles();
     document.head.appendChild(style);
   }
 
@@ -387,7 +387,7 @@ export class AdvancedRouter {
   /**
    * Получить менеджер анимаций
    */
-  getAnimationManager(): AnimationManager {
+  getAnimationManager(): MaskAnimationManager {
     return this.animationManager;
   }
 
@@ -576,5 +576,57 @@ export class AdvancedRouter {
   async cancelCurrentAnimation(): Promise<void> {
     await this.animationManager.cancelCurrentAnimation();
     this.eventEmitter.emit('animation:cancelled');
+  }
+
+  /**
+   * Загрузить CSS стили анимаций
+   */
+  private loadAnimationStyles(): void {
+    // Проверяем, не загружены ли стили уже
+    if (document.head.querySelector('link[href*="animations.css"]')) {
+      return;
+    }
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/animations.css';
+    link.onload = () => console.log('✅ Animation styles loaded');
+    link.onerror = () => console.warn('⚠️ Failed to load animation styles');
+    
+    document.head.appendChild(link);
+  }
+
+  /**
+   * Создать CSS стили для анимаций
+   */
+  private createAnimationStyles(): string {
+    return `
+      /* Базовые стили будут загружены из animations.css */
+      .router-animation-old,
+      .router-animation-new {
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+
+      /* Стили для масковых анимаций */
+      .router-mask-animation {
+        mask-size: 100% 100%;
+        mask-repeat: no-repeat;
+        mask-position: center;
+        -webkit-mask-size: 100% 100%;
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .router-animation-old,
+        .router-animation-new {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    `;
   }
 }
