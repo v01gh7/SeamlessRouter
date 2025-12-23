@@ -5,7 +5,7 @@
 import { getConfig, updateConfig, type RouterConfig, type AnimationType } from "./config";
 import { CacheManager } from "./CacheModule";
 import { PrefetchManager } from "./Prefetch";
-import { MaskAnimationManager } from "./Animations/MaskAnimationManager";
+import { AnimationManager } from "./Animations";
 import { ServiceWorkerManager } from "./Offline";
 import { EventEmitter } from "./utils/events";
 import { navigate as baseNavigate } from "./Router/navigation";
@@ -22,7 +22,7 @@ import {
 export class AdvancedRouter {
   private cacheManager: CacheManager;
   private prefetchManager: PrefetchManager;
-  private animationManager: MaskAnimationManager;
+  private animationManager: AnimationManager;
   private serviceWorkerManager: ServiceWorkerManager;
   private eventEmitter: EventEmitter;
   private isInitialized: boolean = false;
@@ -37,7 +37,7 @@ export class AdvancedRouter {
     // Инициализируем менеджеры
     this.cacheManager = new CacheManager();
     this.prefetchManager = new PrefetchManager(this.cacheManager);
-    this.animationManager = new MaskAnimationManager();
+    this.animationManager = new AnimationManager();
     this.serviceWorkerManager = new ServiceWorkerManager();
     this.eventEmitter = new EventEmitter();
 
@@ -387,7 +387,7 @@ export class AdvancedRouter {
   /**
    * Получить менеджер анимаций
    */
-  getAnimationManager(): MaskAnimationManager {
+  getAnimationManager(): AnimationManager {
     return this.animationManager;
   }
 
@@ -607,16 +607,6 @@ export class AdvancedRouter {
         will-change: transform, opacity;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
-      }
-
-      /* Стили для масковых анимаций */
-      .router-mask-animation {
-        mask-size: 100% 100%;
-        mask-repeat: no-repeat;
-        mask-position: center;
-        -webkit-mask-size: 100% 100%;
-        -webkit-mask-repeat: no-repeat;
-        -webkit-mask-position: center;
       }
 
       @media (prefers-reduced-motion: reduce) {

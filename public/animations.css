@@ -188,77 +188,7 @@
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Масковые анимации */
-.router-mask-animation {
-  mask-size: 100% 100%;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  -webkit-mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-}
 
-/* Анимация mask-circle */
-@keyframes router-mask-circle-in {
-  from { 
-    mask-image: radial-gradient(circle at center, transparent 0%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle at center, transparent 0%, transparent 100%);
-    opacity: 0;
-  }
-  to { 
-    mask-image: radial-gradient(circle at center, black 0%, black 100%);
-    -webkit-mask-image: radial-gradient(circle at center, black 0%, black 100%);
-    opacity: 1;
-  }
-}
-
-@keyframes router-mask-circle-out {
-  from { 
-    mask-image: radial-gradient(circle at center, black 0%, black 100%);
-    -webkit-mask-image: radial-gradient(circle at center, black 0%, black 100%);
-    opacity: 1;
-  }
-  to { 
-    mask-image: radial-gradient(circle at center, black 0%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle at center, black 0%, transparent 100%);
-    opacity: 0;
-  }
-}
-
-.router-animation-mask-circle {
-  animation-timing-function: ease-in-out;
-}
-
-/* Анимация mask-gradient */
-@keyframes router-mask-gradient-in {
-  from { 
-    mask-image: linear-gradient(to right, transparent 0%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 100%);
-    opacity: 0;
-  }
-  to { 
-    mask-image: linear-gradient(to right, black 0%, black 100%);
-    -webkit-mask-image: linear-gradient(to right, black 0%, black 100%);
-    opacity: 1;
-  }
-}
-
-@keyframes router-mask-gradient-out {
-  from { 
-    mask-image: linear-gradient(to right, black 0%, black 100%);
-    -webkit-mask-image: linear-gradient(to right, black 0%, black 100%);
-    opacity: 1;
-  }
-  to { 
-    mask-image: linear-gradient(to right, transparent 0%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 100%);
-    opacity: 0;
-  }
-}
-
-.router-animation-mask-gradient {
-  animation-timing-function: ease-in-out;
-}
 
 /* Классы для ручного управления анимациями */
 .router-animate-fade {
@@ -289,14 +219,6 @@
   animation: router-diagonal-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.router-animate-mask-circle {
-  animation: router-mask-circle-in 0.5s ease-in-out;
-}
-
-.router-animate-mask-gradient {
-  animation: router-mask-gradient-in 0.5s ease-in-out;
-}
-
 /* Поддержка prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .router-animation-old,
@@ -307,9 +229,7 @@
   .router-animate-slide-up,
   .router-animate-slide-down,
   .router-animate-collapse,
-  .router-animate-diagonal,
-  .router-animate-mask-circle,
-  .router-animate-mask-gradient {
+  .router-animate-diagonal {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
