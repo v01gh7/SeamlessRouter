@@ -16,6 +16,14 @@ const getScriptHash = (elem: HTMLScriptElement): string | null => {
     return null;
 };
 
+const removeScriptFromCache = (hash: string): void => {
+    scriptCache.delete(hash);
+};
+
+const clearScriptCache = (): void => {
+    scriptCache.clear();
+};
+
 /**
 * Adds a new <script>, automatically removing existing ones with the same src/code.
 * Uses cache hashing to prevent duplicates.
@@ -80,6 +88,9 @@ const removeExistingScript = (elem: HTMLScriptElement, hash: string): void => {
                 if (text === normalizedCode) el.remove();
             });
     }
+    
+    // Удаляем хэш из кэша при удалении скрипта
+    removeScriptFromCache(hash);
 };
 
 const cloneScript = (elem: HTMLScriptElement): HTMLScriptElement => {
@@ -106,5 +117,7 @@ export const shouldSkip = (elem: Element): boolean =>
 
 export const shouldReload = (elem: Element): boolean => 
     elem.hasAttribute('data-reload');
+
+export { clearScriptCache };
 
 
