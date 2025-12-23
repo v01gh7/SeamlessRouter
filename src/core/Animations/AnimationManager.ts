@@ -344,7 +344,7 @@ export class AnimationManager {
    */
   static createAnimationStyles(): string {
     return `
-      /* Базовые стили будут загружены из animations.css */
+      /* Базовые стили для анимированных элементов */
       .router-animation-old,
       .router-animation-new {
         will-change: transform, opacity;
@@ -361,23 +361,5 @@ export class AnimationManager {
         }
       }
     `;
-  }
-
-  /**
-   * Загрузить CSS анимации
-   */
-  static loadAnimationStyles(): void {
-    // Проверяем, не загружены ли стили уже
-    if (document.head.querySelector('link[href*="animations.css"]')) {
-      return;
-    }
-
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = '/animations.css';
-    link.onload = () => console.log('✅ Animation styles loaded');
-    link.onerror = () => console.warn('⚠️ Failed to load animation styles');
-    
-    document.head.appendChild(link);
   }
 }
