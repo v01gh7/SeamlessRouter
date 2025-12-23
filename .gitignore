@@ -1,5 +1,6 @@
 # === Node / PNPM ===
 node_modules/
+airplans/
 pnpm-lock.yaml
 npm-debug.log*
 yarn-debug.log*
@@ -19,7 +20,9 @@ vite.config.timestamp-*.mjs
 .env.*
 !.env.example
 
-airplans/
+airplans/*
+airplans
+./airplans/
 
 # === IDE & OS junk ===
 .idea/
