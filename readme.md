@@ -6,6 +6,8 @@
 [![Lightweight](https://img.shields.io/badge/lightweight-FF6B35.svg?style=for-the-badge&logo=linuxcontainers&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](./LICENSE)
 
+> **📝 Update Note**: CSS mask animations (`mask-circle` and `mask-gradient`) have been removed to simplify the codebase and reduce bundle size. The router now includes 7 standard animation types that work reliably across all browsers.
+
 ---
 
 ### 🧩 What is this router?
@@ -30,7 +32,7 @@ Download the ready-to-use UMD version from the project root:
 <script data-keep data-skip src="SeamlessRouter.umd.min.js"></script>
 ```
 
-**File size**: ~44KB (minified) | ~12KB gzipped
+**File size**: ~38.8KB (minified) | ~11KB gzipped
 
 #### Development Build
 ```bash
@@ -68,9 +70,8 @@ Include on your site **with the required attributes**:
 By default, all advanced features are enabled with optimal settings:
 - **Prefetching**: Enabled with intelligent prediction
 - **Caching**: 30MB LRU cache with important pages always cached
-- **Animations**: All 9 animation types including CSS mask effects
+- **Animations**: 7 standard animation types (fade, slide, collapse, diagonal)
 - **Offline Mode**: Service Worker with network-first strategy
-- **CSS Mask Animations**: Automatic fallback to standard animations if not supported
 
 The router automatically detects browser capabilities and provides appropriate fallbacks.
 
@@ -279,11 +280,10 @@ if (router.isOfflineModeSupported()) {
 ```
 
 #### 4. **Advanced Animations** 🎬
-- **9 animation types**: fade, slide-left/right/up/down, collapse, diagonal, mask-circle, mask-gradient
-- **CSS Mask Animations**: Modern mask-image based transitions with fallback
+- **7 animation types**: fade, slide-left/right/up/down, collapse, diagonal
 - **Direction-aware**: Different animations for forward/back navigation
 - **Accessibility**: Respects `prefers-reduced-motion`
-- **Browser compatibility**: Automatic fallback to standard animations
+- **Browser compatibility**: Works in all modern browsers
 - **Customizable**: Set default animation type and duration
 
 ```javascript
@@ -294,20 +294,12 @@ router.setDefaultAnimationType('slide-left');
 // Navigate with specific animation
 router.navigateWithAnimation('/page', 'fade');
 
-// Use CSS mask animations (automatic fallback if not supported)
-router.navigateWithAnimation('/page', 'mask-circle');  // Circle reveal effect
-router.navigateWithAnimation('/page', 'mask-gradient'); // Gradient wipe effect
-
 // Navigate without animation
 router.navigateWithoutAnimation('/page');
 
-// Check if mask animations are supported
-const animationManager = router.getAnimationManager();
-if (animationManager.isMaskSupported()) {
-  console.log('✅ CSS mask animations supported');
-} else {
-  console.log('⚠️ Using fallback animations');
-}
+// Get available animation types
+const availableTypes = router.getAvailableAnimationTypes();
+console.log('Available animations:', availableTypes);
 ```
 
 #### Configuration Example:
