@@ -14,16 +14,12 @@ export default defineConfig({
       fileName: 'SeamlessRouter',
       formats: ['es', 'umd']
     },
-    sourcemap: true,
+    sourcemap: false,
+    minify: true,    
     rollupOptions: {
       output: {
-        // Основные файлы в dist
-        entryFileNames: '[name].[format].js',
-        chunkFileNames: '[name]-[hash].js',
-        assetFileNames: '[name].[ext]',
-        
-        // UMD файл также в корень проекта
-        manualChunks: undefined
+        entryFileNames: 'SeamlessRouter.umd.min.js',
+        assetFileNames: '[name].[ext]'
       }
     }
   }
