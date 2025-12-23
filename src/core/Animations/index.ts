@@ -1,0 +1,1 @@
+export { AnimationManager, type AnimationOptions } from './AnimationManager';
