@@ -24,18 +24,38 @@
 
 ### 📦 Installation and Usage
 
+#### Quick Start (UMD Version)
+Download the ready-to-use UMD version from the project root:
+```html
+<script data-keep data-skip src="SeamlessRouter.umd.min.js"></script>
+```
+
+**File size**: ~44KB (minified) | ~12KB gzipped
+
+#### Development Build
 ```bash
 # Install dependencies (development only)
 pnpm install
 
-# Build the project
+# Build all versions
+pnpm build:all
+# or just UMD version
+pnpm build:umd
+# or standard build (ES + UMD in dist/)
 pnpm build
 ```
 
-After building, take the file from `dist/` and include it on your site **with the required attributes**:
+After building, you can use either:
+- **UMD version from root**: `SeamlessRouter.umd.min.js` (for direct download)
+- **ES/UMD versions from dist/**: `dist/SeamlessRouter.es.js` or `dist/SeamlessRouter.umd.js`
 
+Include on your site **with the required attributes**:
 ```html
-<script data-keep data-skip src="seamless-router.js"></script>
+<!-- For UMD version from root -->
+<script data-keep data-skip src="SeamlessRouter.umd.min.js"></script>
+
+<!-- For ES version from dist -->
+<script type="module" data-keep data-skip src="dist/SeamlessRouter.es.js"></script>
 ```
 
 **Connection attributes**:
@@ -43,6 +63,16 @@ After building, take the file from `dist/` and include it on your site **with th
 - `data-skip` — prevents the script from being re-executed when new pages load
 
 **That's it!** The router initializes automatically and starts working. No settings, `init()` calls, or configuration needed.
+
+#### Default Configuration (All Features Enabled)
+By default, all advanced features are enabled with optimal settings:
+- **Prefetching**: Enabled with intelligent prediction
+- **Caching**: 30MB LRU cache with important pages always cached
+- **Animations**: All 9 animation types including CSS mask effects
+- **Offline Mode**: Service Worker with network-first strategy
+- **CSS Mask Animations**: Automatic fallback to standard animations if not supported
+
+The router automatically detects browser capabilities and provides appropriate fallbacks.
 
 ---
 
@@ -249,9 +279,11 @@ if (router.isOfflineModeSupported()) {
 ```
 
 #### 4. **Advanced Animations** 🎬
-- **7 animation types**: fade, slide-left/right/up/down, collapse, diagonal
+- **9 animation types**: fade, slide-left/right/up/down, collapse, diagonal, mask-circle, mask-gradient
+- **CSS Mask Animations**: Modern mask-image based transitions with fallback
 - **Direction-aware**: Different animations for forward/back navigation
 - **Accessibility**: Respects `prefers-reduced-motion`
+- **Browser compatibility**: Automatic fallback to standard animations
 - **Customizable**: Set default animation type and duration
 
 ```javascript
@@ -262,8 +294,20 @@ router.setDefaultAnimationType('slide-left');
 // Navigate with specific animation
 router.navigateWithAnimation('/page', 'fade');
 
+// Use CSS mask animations (automatic fallback if not supported)
+router.navigateWithAnimation('/page', 'mask-circle');  // Circle reveal effect
+router.navigateWithAnimation('/page', 'mask-gradient'); // Gradient wipe effect
+
 // Navigate without animation
 router.navigateWithoutAnimation('/page');
+
+// Check if mask animations are supported
+const animationManager = router.getAnimationManager();
+if (animationManager.isMaskSupported()) {
+  console.log('✅ CSS mask animations supported');
+} else {
+  console.log('⚠️ Using fallback animations');
+}
 ```
 
 #### Configuration Example:
