@@ -41,3 +41,4 @@ coverage/
 .temp/
 tmp/
 vite-cache/
+.continue
