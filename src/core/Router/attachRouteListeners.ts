@@ -49,22 +49,86 @@ export const attachRoutesListeners = (elements: HTMLElement[], onNavigate: (url:
 }
 
 export const attachGlobalRoutesListener = (onNavigate: (url: string) => void) => {
-    document.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement | null;
-        if (!target) return;
+    const handlerMap = new WeakMap<HTMLElement, (e: Event) => void>();
 
-        const link = target.closest(ROUTE_SELECTORS.join(', ')) as HTMLElement | null;
-        if (!link) return;
-
-        const href = getHrefForRoute(link);
+    const handleClick = (e: Event) => {
+        const target = e.currentTarget as HTMLElement;
+        const href = getHrefForRoute(target);
         if (!href) return;
 
         e.preventDefault();
         e.stopPropagation();
         onNavigate(href);
-    });
-};
+    };
 
+    const addListenersToElements = (elements: NodeListOf<Element> | Element[]) => {
+        elements.forEach(el => {
+            if (el instanceof HTMLElement) {
+                const href = getHrefForRoute(el);
+                if (href) {
+                    el.addEventListener('click', handleClick);
+                    handlerMap.set(el, handleClick);
+                }
+            }
+        });
+    };
+
+    const removeListenersFromElements = (elements: NodeListOf<Element> | Element[]) => {
+        elements.forEach(el => {
+            if (el instanceof HTMLElement) {
+                const handler = handlerMap.get(el);
+                if (handler) {
+                    el.removeEventListener('click', handler);
+                    handlerMap.delete(el);
+                }
+            }
+        });
+    };
+
+    // Инициализация
+    const initialLinks = document.querySelectorAll(ROUTE_SELECTORS.join(', '));
+    addListenersToElements(initialLinks);
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+            // Обработка добавленных узлов
+            mutation.addedNodes.forEach(node => {
+                if (node instanceof HTMLElement) {
+                    if (node.matches && node.matches(ROUTE_SELECTORS.join(', '))) {
+                        addListenersToElements([node]);
+                    }
+                    const links = node.querySelectorAll?.(ROUTE_SELECTORS.join(', '));
+                    if (links) {
+                        addListenersToElements(links);
+                    }
+                }
+            });
+
+            // Обработка удаленных узлов
+            mutation.removedNodes.forEach(node => {
+                if (node instanceof HTMLElement) {
+                    if (node.matches && node.matches(ROUTE_SELECTORS.join(', '))) {
+                        removeListenersFromElements([node]);
+                    }
+                    const links = node.querySelectorAll?.(ROUTE_SELECTORS.join(', '));
+                    if (links) {
+                        removeListenersFromElements(links);
+                    }
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Возвращаем функцию для отключения наблюдателя (опционально)
+    return () => {
+        observer.disconnect();
+        // Удалить все обработчики? Но если мы отключаем роутер, то нужно.
+        const allElements = document.querySelectorAll(ROUTE_SELECTORS.join(', '));
+        removeListenersFromElements(allElements);
+    };
+};
 
 
 
