@@ -5,6 +5,8 @@ type CleanupRecord = {
     timeouts: number[];
     intervals: number[];
     listeners: Array<{ target: EventTarget; type: string; handler: any; options?: any }>;
+    classes?: Set<string>;
+    functions?: Set<Function>;
 };
 
 const sandboxMap = new WeakMap<HTMLScriptElement, CleanupRecord>();
@@ -47,26 +49,26 @@ export const initGlobalSandbox = () => {
     const origInsertBefore = Element.prototype.insertBefore;
     const origReplaceChild = Element.prototype.replaceChild;
 
-    Element.prototype.appendChild = function (child: any) {
+        Element.prototype.appendChild = function <T extends Node>(child: T): T {
         if (child instanceof HTMLScriptElement) setupSandbox(child);
-        return origAppend.call(this, child);
+        return origAppend.call(this, child) as T;
     };
 
-    Element.prototype.prepend = function (...children: any[]) {
+    Element.prototype.prepend = function (...children: (Node | string)[]): void {
         for (const child of children) {
             if (child instanceof HTMLScriptElement) setupSandbox(child);
         }
-        return origPrepend.apply(this, children);
+        origPrepend.apply(this, children);
     };
 
-    Element.prototype.insertBefore = function (newNode: any, referenceNode: any) {
+    Element.prototype.insertBefore = function <T extends Node>(newNode: T, referenceNode: Node | null): T {
         if (newNode instanceof HTMLScriptElement) setupSandbox(newNode);
-        return origInsertBefore.call(this, newNode, referenceNode);
+        return origInsertBefore.call(this, newNode, referenceNode) as T;
     };
 
-    Element.prototype.replaceChild = function (newChild: any, oldChild: any) {
+    Element.prototype.replaceChild = function <T extends Node>(newChild: Node, oldChild: T): T {
         if (newChild instanceof HTMLScriptElement) setupSandbox(newChild);
-        return origReplaceChild.call(this, newChild, oldChild);
+        return origReplaceChild.call(this, newChild, oldChild) as T;
     };
 
 
