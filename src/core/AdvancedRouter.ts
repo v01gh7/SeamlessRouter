@@ -51,7 +51,7 @@ export class AdvancedRouter {
     }
   }
 
-    /**
+  /**
    * Внедрить CSS стили для анимаций
    */
   private injectAnimationStyles(): void {
@@ -62,6 +62,8 @@ export class AdvancedRouter {
 
     const style = document.createElement('style');
     style.id = 'router-animation-styles';
+    style.setAttribute('data-keep', '');
+    style.setAttribute('data-skip', '');
     style.textContent = this.createAnimationStyles();
     document.head.appendChild(style);
   }
@@ -319,25 +321,55 @@ export class AdvancedRouter {
   private updateHead(newHead: HTMLHeadElement): void {
     const oldHead = document.head;
     
-    // Обновляем title
+    // Собираем все элементы из нового head, которые нужно сохранить
+    const elementsToKeep = new Set<Element>();
+    
+    // 1. Сначала находим элементы, которые должны остаться (с data-keep или data-skip)
+    Array.from(oldHead.children).forEach(element => {
+      if (element.hasAttribute('data-keep') || element.hasAttribute('data-skip')) {
+        elementsToKeep.add(element);
+      }
+    });
+    
+    // 2. Удаляем все старые элементы, кроме тех что нужно сохранить
+    Array.from(oldHead.children).forEach(element => {
+      if (!elementsToKeep.has(element)) {
+        oldHead.removeChild(element);
+      }
+    });
+    
+    // 3. Добавляем все новые элементы, кроме тех что уже есть с data-keep/data-skip
+    Array.from(newHead.children).forEach(newElement => {
+      // Проверяем, есть ли уже такой элемент с data-keep/data-skip
+      const shouldSkip = newElement.hasAttribute('data-skip');
+      const shouldKeep = newElement.hasAttribute('data-keep');
+      
+      if (shouldSkip) {
+        // Элементы с data-skip не добавляем
+        return;
+      }
+      
+      if (shouldKeep) {
+        // Для элементов с data-keep проверяем, не добавлен ли уже
+        const existingElement = oldHead.querySelector(`[data-keep][id="${newElement.id}"]`) || 
+                               oldHead.querySelector(`[data-keep][src="${newElement.getAttribute('src')}"]`);
+        if (!existingElement) {
+          oldHead.appendChild(newElement.cloneNode(true));
+        }
+      } else {
+        // Обычные элементы добавляем всегда
+        oldHead.appendChild(newElement.cloneNode(true));
+      }
+    });
+    
+    // 4. Убедимся, что title всегда обновляется
     const newTitle = newHead.querySelector('title');
     const oldTitle = oldHead.querySelector('title');
     if (newTitle && oldTitle) {
       oldTitle.textContent = newTitle.textContent;
+    } else if (newTitle && !oldTitle) {
+      oldHead.appendChild(newTitle.cloneNode(true));
     }
-
-    // Обновляем meta теги
-    const metaTagsToUpdate = ['description', 'keywords', 'viewport'];
-    metaTagsToUpdate.forEach(name => {
-      const newMeta = newHead.querySelector(`meta[name="${name}"]`);
-      const oldMeta = oldHead.querySelector(`meta[name="${name}"]`);
-      
-      if (newMeta && oldMeta) {
-        oldMeta.setAttribute('content', newMeta.getAttribute('content') || '');
-      } else if (newMeta && !oldMeta) {
-        oldHead.appendChild(newMeta.cloneNode(true));
-      }
-    });
   }
 
   /**

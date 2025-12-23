@@ -32,7 +32,7 @@ Download the ready-to-use UMD version from the project root:
 <script data-keep data-skip src="SeamlessRouter.umd.min.js"></script>
 ```
 
-**File size**: ~43.4KB (minified) | ~11.8KB gzipped
+**File size**: ~45.8KB (minified) | ~12.3KB gzipped
 
 #### Development Build
 ```bash
