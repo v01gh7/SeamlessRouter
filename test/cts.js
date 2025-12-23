@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    window.kek = 'lolabout'
-    const porevo = 'joskoe uwu porevo'
+    window.kek = 'lolcts'
+    const porevo = 'joskoe uwu porevo cts'
     console.log('content of about.html script executed', porevo);
 })();
